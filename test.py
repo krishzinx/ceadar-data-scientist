@@ -446,3 +446,48 @@ for i in range(1000, 1200):
     df = df.append(pd_dict, ignore_index=True)
 
 df.to_csv('C:/Users/krish/Desktop/CeadarAssignmentCode/ceadar-data-scientist/output_csv.csv')
+df_for_error_metrics = pd.read_csv('C:/Users/krish/Desktop/CeadarAssignmentCode/ceadar-data-scientist/error_metrics_csv.csv')
+
+def calc_accuracy(df):
+    count = 0
+    for index, row in df.iterrows():
+        if row['predicted_total'] == row['actual_total']:
+            count = count + 1
+    acc = (count)/(df.shape[0])
+    return acc
+
+def calc_accuracy_without_decimals(df):
+    count = 0
+    for index, row in df.iterrows():
+        if int(row['predicted_total']) == int(row['actual_total']):
+            count = count + 1
+    acc = (count)/(df.shape[0])
+    return acc
+
+def number_of_images_predicted(df):
+    df_new = df[df['predicted_total'] != -1]
+    return df_new.shape[0]/df.shape[0]
+
+def number_of_images_predicted_correctly(df):
+    df_new = df[df['predicted_total'] != -1]
+    count = 0
+    for index, row in df_new.iterrows():
+        if row['predicted_total'] == row['actual_total']:
+            count = count + 1
+    acc = (count)/(df_new.shape[0])
+    return acc
+
+def number_of_images_predicted_correctly_without_decimals(df):
+    df_new = df[df['predicted_total'] != -1]
+    count = 0
+    for index, row in df_new.iterrows():
+        if int(row['predicted_total']) == int(row['actual_total']):
+            count = count + 1
+    acc = (count)/(df_new.shape[0])
+    return acc
+
+print("Accuracy (Number of reciepts correctly parsed / Number of total reciepts) = " + str(calc_accuracy(df_for_error_metrics)))
+print("Accuracy without decimal points (Number of reciepts correctly parsed without decimal points / Number of total reciepts) = " + str(calc_accuracy_without_decimals(df_for_error_metrics)))
+print("Ratio of estimated images (Number of images which have estimations / Total number of images) = " + str(number_of_images_predicted(df_for_error_metrics)))
+print("Accuracy of images which were estimated (Number of images which have correct estimations / Number of images which have estimations) = " + str(number_of_images_predicted_correctly(df_for_error_metrics)))
+print("Accuracy of images which were estimated correctly without decimal points (Number of images which have correct estimations without decimal points / Number of images which have estimations) = " + str(number_of_images_predicted_correctly_without_decimals(df_for_error_metrics)))
